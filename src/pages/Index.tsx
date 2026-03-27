@@ -115,11 +115,19 @@ export default function Index() {
   const [showCatModal, setShowCatModal] = useState(false);
   const [newCatName, setNewCatName] = useState("");
   const [newCatColor, setNewCatColor] = useState("#4CAF50");
+  const [editingCatId, setEditingCatId] = useState<string | null>(null);
+  const [editCatName, setEditCatName] = useState("");
+  const [editCatColor, setEditCatColor] = useState("#4CAF50");
+  const [deleteCatId, setDeleteCatId] = useState<string | null>(null);
 
   // Account management
   const [showAccModal, setShowAccModal] = useState(false);
   const [newAccName, setNewAccName] = useState("");
   const [newAccBalance, setNewAccBalance] = useState("0");
+  const [editingAccId, setEditingAccId] = useState<string | null>(null);
+  const [editAccName, setEditAccName] = useState("");
+  const [editAccBalance, setEditAccBalance] = useState("0");
+  const [deleteAccId, setDeleteAccId] = useState<string | null>(null);
 
   // ---- Calculator logic ----
   const handleCalc = (key: string) => {
@@ -308,6 +316,30 @@ export default function Index() {
     setDeleteConfirmId(null);
   };
 
+  const openEditCat = (cat: Category) => {
+    setEditingCatId(cat.id);
+    setEditCatName(cat.name);
+    setEditCatColor(cat.color);
+  };
+
+  const saveEditCat = () => {
+    if (!editCatName.trim()) return;
+    setCategories(prev => prev.map(c => c.id === editingCatId ? { ...c, name: editCatName, color: editCatColor } : c));
+    setEditingCatId(null);
+  };
+
+  const openEditAcc = (acc: Account) => {
+    setEditingAccId(acc.id);
+    setEditAccName(acc.name);
+    setEditAccBalance(String(acc.balance));
+  };
+
+  const saveEditAcc = () => {
+    if (!editAccName.trim()) return;
+    setAccounts(prev => prev.map(a => a.id === editingAccId ? { ...a, name: editAccName, balance: parseFloat(editAccBalance) || 0 } : a));
+    setEditingAccId(null);
+  };
+
   return (
     <div className={`app-root${isDark ? " dark" : ""}`}>
       {/* Sidebar overlay */}
@@ -484,7 +516,14 @@ export default function Index() {
                 <div className="acc-name">{acc.name}</div>
                 <div className="acc-balance">{formatMoney(acc.balance)}</div>
               </div>
-              <Icon name="ChevronRight" size={20} color="#aaa" />
+              <div className="t-actions">
+                <button className="t-btn t-btn--edit" onClick={() => openEditAcc(acc)}>
+                  <Icon name="Pencil" size={15} />
+                </button>
+                <button className="t-btn t-btn--delete" onClick={() => setDeleteAccId(acc.id)}>
+                  <Icon name="Trash2" size={15} />
+                </button>
+              </div>
             </div>
           ))}
           <div className="total-all-card">
@@ -524,9 +563,14 @@ export default function Index() {
               <div key={cat.id} className="cat-row">
                 <div className="cat-star-lg" style={{ color: cat.color }}>★</div>
                 <div className="cat-row-name">{cat.name}</div>
-                <button className="cat-delete" onClick={() => setCategories(prev => prev.filter(c => c.id !== cat.id))}>
-                  <Icon name="Trash2" size={16} color="#e53935" />
-                </button>
+                <div className="t-actions" style={{ flexDirection: "row" }}>
+                  <button className="t-btn t-btn--edit" onClick={() => openEditCat(cat)}>
+                    <Icon name="Pencil" size={15} />
+                  </button>
+                  <button className="t-btn t-btn--delete" onClick={() => setDeleteCatId(cat.id)}>
+                    <Icon name="Trash2" size={15} />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -665,6 +709,79 @@ export default function Index() {
           </button>
         ))}
       </nav>
+
+      {/* ===== EDIT CATEGORY MODAL ===== */}
+      {editingCatId && (
+        <div className="modal-overlay" onClick={() => setEditingCatId(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-title">Редактировать категорию</div>
+            <label className="modal-field-label">Название</label>
+            <input className="modal-input" value={editCatName} onChange={e => setEditCatName(e.target.value)} autoFocus />
+            <label className="color-label">Цвет:
+              <input type="color" value={editCatColor} onChange={e => setEditCatColor(e.target.value)} className="color-input" />
+            </label>
+            <div className="modal-btns">
+              <button className="modal-cancel" onClick={() => setEditingCatId(null)}>Отмена</button>
+              <button className="modal-ok" onClick={saveEditCat}>Сохранить</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== DELETE CATEGORY CONFIRM ===== */}
+      {deleteCatId && (
+        <div className="modal-overlay" onClick={() => setDeleteCatId(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-title" style={{ color: "#e53935" }}>Удалить категорию?</div>
+            <p className="modal-desc">
+              {categories.find(c => c.id === deleteCatId)?.name}
+            </p>
+            <div className="modal-btns">
+              <button className="modal-cancel" onClick={() => setDeleteCatId(null)}>Отмена</button>
+              <button className="modal-ok modal-ok--danger" onClick={() => {
+                setCategories(prev => prev.filter(c => c.id !== deleteCatId));
+                setDeleteCatId(null);
+              }}>Удалить</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== EDIT ACCOUNT MODAL ===== */}
+      {editingAccId && (
+        <div className="modal-overlay" onClick={() => setEditingAccId(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-title">Редактировать счёт</div>
+            <label className="modal-field-label">Название</label>
+            <input className="modal-input" value={editAccName} onChange={e => setEditAccName(e.target.value)} autoFocus />
+            <label className="modal-field-label">Баланс</label>
+            <input className="modal-input" type="number" value={editAccBalance} onChange={e => setEditAccBalance(e.target.value)} />
+            <div className="modal-btns">
+              <button className="modal-cancel" onClick={() => setEditingAccId(null)}>Отмена</button>
+              <button className="modal-ok" onClick={saveEditAcc}>Сохранить</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== DELETE ACCOUNT CONFIRM ===== */}
+      {deleteAccId && (
+        <div className="modal-overlay" onClick={() => setDeleteAccId(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-title" style={{ color: "#e53935" }}>Удалить счёт?</div>
+            <p className="modal-desc">
+              {accounts.find(a => a.id === deleteAccId)?.name} — {formatMoney(accounts.find(a => a.id === deleteAccId)?.balance || 0)}
+            </p>
+            <div className="modal-btns">
+              <button className="modal-cancel" onClick={() => setDeleteAccId(null)}>Отмена</button>
+              <button className="modal-ok modal-ok--danger" onClick={() => {
+                setAccounts(prev => prev.filter(a => a.id !== deleteAccId));
+                setDeleteAccId(null);
+              }}>Удалить</button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ===== EDIT MODAL ===== */}
       {editingId && (
