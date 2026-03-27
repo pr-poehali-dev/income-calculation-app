@@ -101,16 +101,108 @@
   }
 }
 
+/* ===== THEME VARIABLES ===== */
+:root {
+  --app-bg: #f0f4f8;
+  --card-bg: #ffffff;
+  --card-bg2: #fafafa;
+  --month-bar-bg: #bbdefb;
+  --month-bar-border: #a8c7e8;
+  --text-primary: #1a1a1a;
+  --text-secondary: #222;
+  --text-muted: #888;
+  --text-faint: #bbb;
+  --border-color: #e0e0e0;
+  --border-light: #f0f0f0;
+  --border-eee: #eeeeee;
+  --income-bg: #e8f5e9;
+  --income-border: #c8e6c9;
+  --income-text: #2e7d32;
+  --acc-total-bg: #e3f2fd;
+  --report-acc-bg: #e3f2fd;
+  --report-acc-border: #c8dff4;
+  --report-period-bg: #bbdefb;
+  --calc-btn-bg: #f5f5f5;
+  --calc-btn-border: #e0e0e0;
+  --calc-btn-active: #e0e0e0;
+  --calc-op-bg: #e8eaf6;
+  --calc-op-color: #3949ab;
+  --calc-back-bg: #fce4ec;
+  --calc-back-color: #c62828;
+  --nav-bg: #ffffff;
+  --nav-border: #e0e0e0;
+  --nav-inactive: #9e9e9e;
+  --modal-bg: #ffffff;
+  --modal-input-bg: #ffffff;
+  --modal-input-border: #e0e0e0;
+  --modal-cancel-bg: #f5f5f5;
+  --modal-cancel-color: #555;
+  --color-label: #555;
+  --cat-name-color: #444;
+  --cat-active-bg: #e3f2fd;
+  --bar-bg: #f0f0f0;
+  --acc-name-color: #222;
+  --section-title-color: #1565c0;
+  --total-label-color: #555;
+  --shadow: rgba(0, 0, 0, 0.08);
+}
+
+.app-root.dark {
+  --app-bg: #0f1117;
+  --card-bg: #1a1d27;
+  --card-bg2: #1e2130;
+  --month-bar-bg: #1a2a3a;
+  --month-bar-border: #2a3a4a;
+  --text-primary: #e8eaf0;
+  --text-secondary: #d0d4e0;
+  --text-muted: #7a8090;
+  --text-faint: #4a5060;
+  --border-color: #2a2d3a;
+  --border-light: #222530;
+  --border-eee: #252833;
+  --income-bg: #0d2218;
+  --income-border: #1a3a28;
+  --income-text: #4caf77;
+  --acc-total-bg: #0d1e30;
+  --report-acc-bg: #0d1e30;
+  --report-acc-border: #1a2d42;
+  --report-period-bg: #1a2a3a;
+  --calc-btn-bg: #1e2130;
+  --calc-btn-border: #2a2d3a;
+  --calc-btn-active: #2a2d3a;
+  --calc-op-bg: #1a1d35;
+  --calc-op-color: #7986cb;
+  --calc-back-bg: #2a1520;
+  --calc-back-color: #ef5350;
+  --nav-bg: #13151f;
+  --nav-border: #1e2130;
+  --nav-inactive: #4a5060;
+  --modal-bg: #1a1d27;
+  --modal-input-bg: #1e2130;
+  --modal-input-border: #2a2d3a;
+  --modal-cancel-bg: #1e2130;
+  --modal-cancel-color: #9a9faf;
+  --color-label: #9a9faf;
+  --cat-name-color: #b0b4c0;
+  --cat-active-bg: #0d1e30;
+  --bar-bg: #1e2130;
+  --acc-name-color: #d0d4e0;
+  --section-title-color: #5b9bd5;
+  --total-label-color: #9a9faf;
+  --shadow: rgba(0, 0, 0, 0.3);
+}
+
 /* ===== APP LAYOUT ===== */
 .app-root {
   max-width: 430px;
   margin: 0 auto;
   min-height: 100dvh;
-  background: #f0f4f8;
+  background: var(--app-bg);
   display: flex;
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  transition: background 0.3s ease;
 }
 
 /* ===== HEADER ===== */
@@ -231,11 +323,12 @@
 
 /* ===== MONTH BAR ===== */
 .month-bar {
-  background: #bbdefb;
+  background: var(--month-bar-bg);
   padding: 14px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  transition: background 0.3s;
 }
 
 .month-info {
@@ -246,13 +339,13 @@
 .month-name {
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-primary);
 }
 
 .month-total {
   font-size: 22px;
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--text-primary);
 }
 
 .month-arrow {
@@ -260,7 +353,7 @@
   border: none;
   cursor: pointer;
   padding: 6px 10px;
-  color: #555;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
 }
@@ -270,15 +363,16 @@
 
 /* ===== CALCULATOR ===== */
 .calc-section {
-  background: white;
+  background: var(--card-bg);
   padding: 16px;
   margin: 0;
+  transition: background 0.3s;
 }
 
 .calc-display {
   text-align: center;
   padding: 10px 16px;
-  background: #fafafa;
+  background: var(--card-bg2);
   border-radius: 8px;
   margin-bottom: 12px;
   min-height: 52px;
@@ -286,23 +380,24 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  transition: background 0.3s;
 }
 
 .calc-op {
   font-size: 13px;
-  color: #888;
+  color: var(--text-muted);
 }
 
 .calc-value {
   font-size: 28px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-secondary);
   font-family: "Golos Text", sans-serif;
 }
 
 .calc-placeholder {
   font-size: 22px;
-  color: #bbb;
+  color: var(--text-faint);
 }
 
 .calc-grid {
@@ -313,13 +408,13 @@
 
 .calc-btn {
   padding: 16px 8px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--calc-btn-border);
   border-radius: 8px;
-  background: #f5f5f5;
+  background: var(--calc-btn-bg);
   font-size: 22px;
   font-weight: 600;
   cursor: pointer;
-  color: #333;
+  color: var(--text-secondary);
   transition:
     background 0.15s,
     transform 0.1s;
@@ -327,23 +422,24 @@
 }
 .calc-btn:active {
   transform: scale(0.95);
-  background: #e0e0e0;
+  background: var(--calc-btn-active);
 }
 .calc-btn--op {
-  background: #e8eaf6;
-  color: #3949ab;
+  background: var(--calc-op-bg);
+  color: var(--calc-op-color);
 }
 .calc-btn--back {
-  background: #fce4ec;
-  color: #c62828;
+  background: var(--calc-back-bg);
+  color: var(--calc-back-color);
   font-size: 18px;
 }
 
 /* ===== CATEGORIES ===== */
 .cats-section {
-  background: white;
+  background: var(--card-bg);
   padding: 12px 16px 16px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--border-eee);
+  transition: background 0.3s;
 }
 
 .cats-grid {
@@ -366,7 +462,7 @@
 }
 .cat-item--active {
   border-color: #1565c0;
-  background: #e3f2fd;
+  background: var(--cat-active-bg);
 }
 
 .cat-icon--list {
@@ -386,7 +482,7 @@
 
 .cat-name {
   font-size: 11px;
-  color: #444;
+  color: var(--cat-name-color);
   text-align: center;
   line-height: 1.2;
   word-break: break-word;
@@ -394,13 +490,14 @@
 
 /* ===== ADD INCOME ===== */
 .add-btn-row {
-  background: #e8f5e9;
+  background: var(--income-bg);
   padding: 10px 16px;
-  border-top: 1px solid #c8e6c9;
+  border-top: 1px solid var(--income-border);
+  transition: background 0.3s;
 }
 
 .today-earned {
-  color: #2e7d32;
+  color: var(--income-text);
   font-size: 14px;
   font-weight: 600;
   margin-bottom: 8px;
@@ -433,12 +530,13 @@
 
 /* ===== TRANSACTIONS LIST ===== */
 .transactions-list {
-  background: white;
+  background: var(--card-bg);
+  transition: background 0.3s;
 }
 
 .empty-state {
   text-align: center;
-  color: #bbb;
+  color: var(--text-faint);
   padding: 24px;
   font-size: 14px;
 }
@@ -448,7 +546,7 @@
   align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--border-light);
   animation: fadeIn 0.3s ease;
 }
 
@@ -475,11 +573,11 @@
 .t-cat {
   font-size: 16px;
   font-weight: 600;
-  color: #222;
+  color: var(--text-secondary);
 }
 .t-month {
   font-size: 13px;
-  color: #888;
+  color: var(--text-muted);
   margin-top: 2px;
 }
 
@@ -489,11 +587,11 @@
 .t-amount {
   font-size: 17px;
   font-weight: 700;
-  color: #2e7d32;
+  color: var(--income-text);
 }
 .t-date {
   font-size: 13px;
-  color: #888;
+  color: var(--text-muted);
   margin-top: 2px;
 }
 
@@ -513,19 +611,20 @@
 .section-title {
   font-size: 18px;
   font-weight: 700;
-  color: #1565c0;
+  color: var(--section-title-color);
   padding: 16px 16px 8px;
 }
 
 .account-card {
-  background: white;
+  background: var(--card-bg);
   margin: 8px 16px;
   border-radius: 12px;
   padding: 14px 16px;
   display: flex;
   align-items: center;
   gap: 14px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 4px var(--shadow);
+  transition: background 0.3s;
 }
 
 .acc-icon {
@@ -537,7 +636,7 @@
 .acc-name {
   font-size: 16px;
   font-weight: 600;
-  color: #222;
+  color: var(--acc-name-color);
 }
 .acc-balance {
   font-size: 18px;
@@ -547,17 +646,18 @@
 }
 
 .total-all-card {
-  background: #e3f2fd;
+  background: var(--acc-total-bg);
   margin: 8px 16px;
   border-radius: 12px;
   padding: 14px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: background 0.3s;
 }
 .total-label {
   font-size: 16px;
-  color: #555;
+  color: var(--total-label-color);
 }
 .total-val {
   font-size: 20px;
@@ -567,7 +667,7 @@
 
 .add-btn-secondary {
   margin: 12px 16px;
-  background: white;
+  background: var(--card-bg);
   border: 2px dashed #1565c0;
   color: #1565c0;
   border-radius: 10px;
@@ -584,7 +684,7 @@
   transition: background 0.2s;
 }
 .add-btn-secondary:hover {
-  background: #e3f2fd;
+  background: var(--cat-active-bg);
 }
 
 /* ===== CATEGORIES SCREEN ===== */
@@ -596,11 +696,12 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  background: white;
+  background: var(--card-bg);
   border-radius: 10px;
   padding: 12px 14px;
   margin-bottom: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 1px 3px var(--shadow);
+  transition: background 0.3s;
 }
 
 .cat-star-lg {
@@ -610,7 +711,7 @@
   flex: 1;
   font-size: 16px;
   font-weight: 600;
-  color: #222;
+  color: var(--text-secondary);
 }
 .cat-delete {
   background: none;
@@ -624,7 +725,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 200;
   display: flex;
   align-items: center;
@@ -633,12 +734,13 @@
 }
 
 .modal {
-  background: white;
+  background: var(--modal-bg);
   border-radius: 16px;
   padding: 24px;
   width: 100%;
   max-width: 320px;
   animation: scaleIn 0.2s ease;
+  transition: background 0.3s;
 }
 
 @keyframes scaleIn {
@@ -661,7 +763,9 @@
 
 .modal-input {
   width: 100%;
-  border: 1.5px solid #e0e0e0;
+  border: 1.5px solid var(--modal-input-border);
+  background: var(--modal-input-bg);
+  color: var(--text-secondary);
   border-radius: 8px;
   padding: 10px 12px;
   font-size: 15px;
@@ -669,6 +773,9 @@
   font-family: "Golos Text", sans-serif;
   outline: none;
   box-sizing: border-box;
+  transition:
+    background 0.3s,
+    border 0.2s;
 }
 .modal-input:focus {
   border-color: #1565c0;
@@ -679,7 +786,7 @@
   align-items: center;
   gap: 12px;
   font-size: 15px;
-  color: #555;
+  color: var(--color-label);
   margin-bottom: 16px;
 }
 
@@ -710,8 +817,8 @@
 }
 
 .modal-cancel {
-  background: #f5f5f5;
-  color: #555;
+  background: var(--modal-cancel-bg);
+  color: var(--modal-cancel-color);
 }
 .modal-ok {
   background: #1565c0;
@@ -724,10 +831,11 @@
 /* ===== REPORTS ===== */
 .report-tabs {
   display: flex;
-  background: white;
+  background: var(--card-bg);
   padding: 12px 16px;
   gap: 8px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-eee);
+  transition: background 0.3s;
 }
 
 .report-tab {
@@ -735,7 +843,7 @@
   padding: 8px;
   border: 2px solid #1565c0;
   border-radius: 8px;
-  background: white;
+  background: var(--card-bg);
   color: #1565c0;
   font-size: 14px;
   font-weight: 600;
@@ -750,33 +858,35 @@
 }
 
 .report-period-row {
-  background: #bbdefb;
+  background: var(--report-period-bg);
   padding: 10px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #a8c7e8;
+  border-bottom: 1px solid var(--month-bar-border);
+  transition: background 0.3s;
 }
 
 .report-period-label {
   font-size: 16px;
   font-weight: 600;
-  color: #1a1a1a;
+  color: var(--text-primary);
 }
 
 .report-acc-row {
-  background: #e3f2fd;
+  background: var(--report-acc-bg);
   padding: 12px 16px;
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 1px solid #c8dff4;
+  border-bottom: 1px solid var(--report-acc-border);
+  transition: background 0.3s;
 }
 
 .report-acc-label {
   font-size: 15px;
   font-weight: 600;
-  color: #333;
+  color: var(--text-secondary);
 }
 .report-acc-total {
   flex: 1;
@@ -789,37 +899,41 @@
   padding: 14px 16px;
   font-size: 20px;
   font-weight: 700;
-  color: #2e7d32;
-  background: white;
-  border-bottom: 1px solid #eee;
+  color: var(--income-text);
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border-eee);
+  transition: background 0.3s;
 }
 .report-total span {
-  color: #2e7d32;
+  color: var(--income-text);
 }
 
 .pie-container {
   display: flex;
   justify-content: center;
   padding: 20px;
-  background: white;
+  background: var(--card-bg);
+  transition: background 0.3s;
 }
 
 .report-bars {
-  background: white;
+  background: var(--card-bg);
   padding: 12px 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
+  transition: background 0.3s;
 }
 
 .report-bar-row {
 }
 .report-bar-bg {
-  background: #f0f0f0;
+  background: var(--bar-bg);
   border-radius: 4px;
   height: 20px;
   overflow: hidden;
   margin-bottom: 4px;
+  transition: background 0.3s;
 }
 .report-bar-fill {
   height: 100%;
@@ -833,7 +947,7 @@
 }
 .report-bar-pct {
   font-size: 13px;
-  color: #888;
+  color: var(--text-muted);
   width: 36px;
 }
 .report-bar-cat-star {
@@ -842,13 +956,13 @@
 .report-bar-cat-name {
   flex: 1;
   font-size: 14px;
-  color: #333;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 .report-bar-sum {
   font-size: 15px;
   font-weight: 700;
-  color: #2e7d32;
+  color: var(--income-text);
 }
 
 /* ===== BOTTOM NAV ===== */
@@ -859,11 +973,14 @@
   transform: translateX(-50%);
   width: 100%;
   max-width: 430px;
-  background: white;
-  border-top: 1px solid #e0e0e0;
+  background: var(--nav-bg);
+  border-top: 1px solid var(--nav-border);
   display: flex;
   z-index: 10;
-  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 -2px 12px var(--shadow);
+  transition:
+    background 0.3s,
+    border-color 0.3s;
 }
 
 .bottom-nav-btn {
@@ -876,7 +993,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: #9e9e9e;
+  color: var(--nav-inactive);
   font-size: 10px;
   font-family: "Golos Text", sans-serif;
   transition: color 0.2s;

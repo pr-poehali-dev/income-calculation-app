@@ -101,6 +101,9 @@ export default function Index() {
   const [reportMonth, setReportMonth] = useState<number>(today.getMonth());
   const [reportYear, setReportYear] = useState<number>(today.getFullYear());
 
+  // Theme
+  const [isDark, setIsDark] = useState(false);
+
   // Category management
   const [showCatModal, setShowCatModal] = useState(false);
   const [newCatName, setNewCatName] = useState("");
@@ -273,7 +276,7 @@ export default function Index() {
   };
 
   return (
-    <div className="app-root">
+    <div className={`app-root${isDark ? " dark" : ""}`}>
       {/* Sidebar overlay */}
       {menuOpen && (
         <div className="sidebar-overlay" onClick={() => setMenuOpen(false)}>
@@ -306,8 +309,8 @@ export default function Index() {
         <h1 className="header-title">
           {navItems.find(n => n.id === screen)?.label || "Доходы"}
         </h1>
-        <button className="header-btn">
-          <Icon name="SunMoon" size={22} />
+        <button className="header-btn" onClick={() => setIsDark(d => !d)} title={isDark ? "Светлая тема" : "Тёмная тема"}>
+          <Icon name={isDark ? "Sun" : "Moon"} size={22} />
         </button>
       </header>
 
