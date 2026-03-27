@@ -104,6 +104,13 @@ export default function Index() {
   // Theme
   const [isDark, setIsDark] = useState(false);
 
+  // Edit transaction
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editAmount, setEditAmount] = useState("");
+  const [editCategoryId, setEditCategoryId] = useState("");
+  const [editDate, setEditDate] = useState("");
+  const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+
   // Category management
   const [showCatModal, setShowCatModal] = useState(false);
   const [newCatName, setNewCatName] = useState("");
@@ -275,6 +282,32 @@ export default function Index() {
     else setReportMonth(m => m + 1);
   };
 
+  const openEdit = (t: Transaction) => {
+    setEditingId(t.id);
+    setEditAmount(String(t.amount));
+    setEditCategoryId(t.categoryId);
+    setEditDate(t.date);
+  };
+
+  const saveEdit = () => {
+    if (!editingId) return;
+    const newAmount = parseFloat(editAmount) || 0;
+    setTransactions(prev => prev.map(t => {
+      if (t.id !== editingId) return t;
+      const diff = newAmount - t.amount;
+      setAccounts(accs => accs.map(a => a.id === t.accountId ? { ...a, balance: a.balance + diff } : a));
+      return { ...t, amount: newAmount, categoryId: editCategoryId, date: editDate };
+    }));
+    setEditingId(null);
+  };
+
+  const deleteTransaction = (id: string) => {
+    const t = transactions.find(x => x.id === id);
+    if (t) setAccounts(prev => prev.map(a => a.id === t.accountId ? { ...a, balance: a.balance - t.amount } : a));
+    setTransactions(prev => prev.filter(x => x.id !== id));
+    setDeleteConfirmId(null);
+  };
+
   return (
     <div className={`app-root${isDark ? " dark" : ""}`}>
       {/* Sidebar overlay */}
@@ -406,6 +439,14 @@ export default function Index() {
                   <div className="t-right">
                     <div className="t-amount">{formatMoney(t.amount)}</div>
                     <div className="t-date">{t.date}</div>
+                  </div>
+                  <div className="t-actions">
+                    <button className="t-btn t-btn--edit" onClick={() => openEdit(t)}>
+                      <Icon name="Pencil" size={15} />
+                    </button>
+                    <button className="t-btn t-btn--delete" onClick={() => setDeleteConfirmId(t.id)}>
+                      <Icon name="Trash2" size={15} />
+                    </button>
                   </div>
                 </div>
               );
@@ -624,6 +665,65 @@ export default function Index() {
           </button>
         ))}
       </nav>
+
+      {/* ===== EDIT MODAL ===== */}
+      {editingId && (
+        <div className="modal-overlay" onClick={() => setEditingId(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-title">Редактировать доход</div>
+            <label className="modal-field-label">Сумма</label>
+            <input
+              className="modal-input"
+              type="number"
+              value={editAmount}
+              onChange={e => setEditAmount(e.target.value)}
+              autoFocus
+            />
+            <label className="modal-field-label">Категория</label>
+            <select
+              className="modal-input"
+              value={editCategoryId}
+              onChange={e => setEditCategoryId(e.target.value)}
+            >
+              {categories.map(c => (
+                <option key={c.id} value={c.id}>{c.name}</option>
+              ))}
+            </select>
+            <label className="modal-field-label">Дата</label>
+            <input
+              className="modal-input"
+              type="text"
+              placeholder="ДД.ММ.ГГГГ"
+              value={editDate}
+              onChange={e => setEditDate(e.target.value)}
+            />
+            <div className="modal-btns">
+              <button className="modal-cancel" onClick={() => setEditingId(null)}>Отмена</button>
+              <button className="modal-ok" onClick={saveEdit}>Сохранить</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== DELETE CONFIRM ===== */}
+      {deleteConfirmId && (
+        <div className="modal-overlay" onClick={() => setDeleteConfirmId(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-title" style={{ color: "#e53935" }}>Удалить доход?</div>
+            <p className="modal-desc">
+              {(() => {
+                const t = transactions.find(x => x.id === deleteConfirmId);
+                const cat = categories.find(c => c.id === t?.categoryId);
+                return `${cat?.name || "—"} — ${formatMoney(t?.amount || 0)} от ${t?.date}`;
+              })()}
+            </p>
+            <div className="modal-btns">
+              <button className="modal-cancel" onClick={() => setDeleteConfirmId(null)}>Отмена</button>
+              <button className="modal-ok modal-ok--danger" onClick={() => deleteTransaction(deleteConfirmId)}>Удалить</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
