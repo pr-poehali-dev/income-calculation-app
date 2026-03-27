@@ -13,6 +13,7 @@ type Account = {
   id: string;
   name: string;
   balance: number;
+  archived?: boolean;
 };
 
 type Transaction = {
@@ -128,6 +129,8 @@ export default function Index() {
   const [editAccName, setEditAccName] = useState("");
   const [editAccBalance, setEditAccBalance] = useState("0");
   const [deleteAccId, setDeleteAccId] = useState<string | null>(null);
+  const [archiveAccId, setArchiveAccId] = useState<string | null>(null);
+  const [showArchive, setShowArchive] = useState(false);
 
   // ---- Calculator logic ----
   const handleCalc = (key: string) => {
@@ -508,8 +511,9 @@ export default function Index() {
       {/* ========== ACCOUNTS SCREEN ========== */}
       {screen === "accounts" && (
         <div className="screen">
+          {/* Active accounts */}
           <div className="section-title">Мои счета</div>
-          {accounts.map(acc => (
+          {accounts.filter(a => !a.archived).map(acc => (
             <div key={acc.id} className="account-card">
               <div className="acc-icon"><Icon name="Wallet" size={28} color="#1565C0" /></div>
               <div className="acc-info">
@@ -517,29 +521,76 @@ export default function Index() {
                 <div className="acc-balance">{formatMoney(acc.balance)}</div>
               </div>
               <div className="t-actions">
-                <button className="t-btn t-btn--edit" onClick={() => openEditAcc(acc)}>
+                <button className="t-btn t-btn--edit" title="Редактировать" onClick={() => openEditAcc(acc)}>
                   <Icon name="Pencil" size={15} />
                 </button>
-                <button className="t-btn t-btn--delete" onClick={() => setDeleteAccId(acc.id)}>
+                <button className="t-btn t-btn--archive" title="В архив" onClick={() => setArchiveAccId(acc.id)}>
+                  <Icon name="Archive" size={15} />
+                </button>
+                <button className="t-btn t-btn--delete" title="Удалить" onClick={() => setDeleteAccId(acc.id)}>
                   <Icon name="Trash2" size={15} />
                 </button>
               </div>
             </div>
           ))}
+
           <div className="total-all-card">
-            <span className="total-label">Все счета</span>
-            <span className="total-val">{formatMoney(accounts.reduce((s, a) => s + a.balance, 0))}</span>
+            <span className="total-label">Всего (активные)</span>
+            <span className="total-val">{formatMoney(accounts.filter(a => !a.archived).reduce((s, a) => s + a.balance, 0))}</span>
           </div>
+
           <button className="add-btn-secondary" onClick={() => setShowAccModal(true)}>
             <Icon name="Plus" size={16} /> Добавить счёт
           </button>
+
+          {/* Archive toggle */}
+          {accounts.some(a => a.archived) && (
+            <button className="archive-toggle-btn" onClick={() => setShowArchive(v => !v)}>
+              <Icon name="Archive" size={16} />
+              Архив счетов ({accounts.filter(a => a.archived).length})
+              <Icon name={showArchive ? "ChevronUp" : "ChevronDown"} size={16} />
+            </button>
+          )}
+
+          {/* Archived accounts */}
+          {showArchive && (
+            <div className="archive-section">
+              {accounts.filter(a => a.archived).map(acc => (
+                <div key={acc.id} className="account-card account-card--archived">
+                  <div className="acc-icon"><Icon name="Archive" size={24} color="#aaa" /></div>
+                  <div className="acc-info">
+                    <div className="acc-name acc-name--archived">{acc.name}</div>
+                    <div className="acc-balance acc-balance--archived">{formatMoney(acc.balance)}</div>
+                  </div>
+                  <div className="t-actions">
+                    <button
+                      className="t-btn t-btn--unarchive"
+                      title="Восстановить"
+                      onClick={() => setAccounts(prev => prev.map(a => a.id === acc.id ? { ...a, archived: false } : a))}
+                    >
+                      <Icon name="ArchiveRestore" size={15} />
+                    </button>
+                    <button className="t-btn t-btn--delete" title="Удалить" onClick={() => setDeleteAccId(acc.id)}>
+                      <Icon name="Trash2" size={15} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+              <div className="total-all-card" style={{ margin: "0 16px 8px" }}>
+                <span className="total-label">Всего в архиве</span>
+                <span className="total-val" style={{ color: "#888" }}>{formatMoney(accounts.filter(a => a.archived).reduce((s, a) => s + a.balance, 0))}</span>
+              </div>
+            </div>
+          )}
 
           {showAccModal && (
             <div className="modal-overlay" onClick={() => setShowAccModal(false)}>
               <div className="modal" onClick={e => e.stopPropagation()}>
                 <div className="modal-title">Новый счёт</div>
-                <input className="modal-input" placeholder="Название" value={newAccName} onChange={e => setNewAccName(e.target.value)} />
-                <input className="modal-input" placeholder="Начальный баланс" type="number" value={newAccBalance} onChange={e => setNewAccBalance(e.target.value)} />
+                <label className="modal-field-label">Название</label>
+                <input className="modal-input" placeholder="Название" value={newAccName} onChange={e => setNewAccName(e.target.value)} autoFocus />
+                <label className="modal-field-label">Начальный баланс</label>
+                <input className="modal-input" placeholder="0" type="number" value={newAccBalance} onChange={e => setNewAccBalance(e.target.value)} />
                 <div className="modal-btns">
                   <button className="modal-cancel" onClick={() => setShowAccModal(false)}>Отмена</button>
                   <button className="modal-ok" onClick={() => {
@@ -759,6 +810,30 @@ export default function Index() {
             <div className="modal-btns">
               <button className="modal-cancel" onClick={() => setEditingAccId(null)}>Отмена</button>
               <button className="modal-ok" onClick={saveEditAcc}>Сохранить</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== ARCHIVE ACCOUNT CONFIRM ===== */}
+      {archiveAccId && (
+        <div className="modal-overlay" onClick={() => setArchiveAccId(null)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-title" style={{ color: "#FF9800" }}>Перенести в архив?</div>
+            <p className="modal-desc">
+              <span style={{ fontSize: 20 }}>🗃️</span>{" "}
+              {accounts.find(a => a.id === archiveAccId)?.name} — {formatMoney(accounts.find(a => a.id === archiveAccId)?.balance || 0)}
+            </p>
+            <p style={{ fontSize: 13, color: "var(--text-muted)", marginBottom: 16, lineHeight: 1.5 }}>
+              Счёт скроется из активных, но все данные сохранятся. Восстановить можно в любой момент.
+            </p>
+            <div className="modal-btns">
+              <button className="modal-cancel" onClick={() => setArchiveAccId(null)}>Отмена</button>
+              <button className="modal-ok modal-ok--archive" onClick={() => {
+                setAccounts(prev => prev.map(a => a.id === archiveAccId ? { ...a, archived: true } : a));
+                setArchiveAccId(null);
+                setShowArchive(true);
+              }}>В архив</button>
             </div>
           </div>
         </div>

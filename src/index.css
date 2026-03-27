@@ -1047,6 +1047,84 @@
   background: #fce4ec;
 }
 
+.t-btn--archive {
+  background: #fff3e0;
+  color: #e65100;
+}
+.t-btn--archive:hover {
+  background: #ffe0b2;
+}
+
+.t-btn--unarchive {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+.t-btn--unarchive:hover {
+  background: #c8e6c9;
+}
+
+.dark .t-btn--archive {
+  background: #2a1a00;
+  color: #ff9800;
+}
+.dark .t-btn--unarchive {
+  background: #0d2218;
+  color: #4caf77;
+}
+
+/* ===== ARCHIVE SECTION ===== */
+.archive-toggle-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 16px 8px;
+  padding: 12px 16px;
+  width: calc(100% - 32px);
+  background: none;
+  border: 1.5px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: "Golos Text", sans-serif;
+  transition:
+    background 0.2s,
+    color 0.2s;
+}
+.archive-toggle-btn:hover {
+  background: var(--cat-active-bg);
+  color: #1565c0;
+}
+
+.archive-section {
+  animation: fadeIn 0.25s ease;
+}
+
+.account-card--archived {
+  opacity: 0.65;
+  border: 1.5px dashed var(--border-color);
+  box-shadow: none;
+}
+
+.acc-name--archived {
+  color: var(--text-muted) !important;
+  text-decoration: line-through;
+  text-decoration-color: var(--text-faint);
+}
+
+.acc-balance--archived {
+  color: var(--text-muted) !important;
+  font-size: 15px !important;
+}
+
+.modal-ok--archive {
+  background: #e65100 !important;
+}
+.modal-ok--archive:hover {
+  background: #bf360c !important;
+}
+
 /* ===== MODAL EXTRAS ===== */
 .modal-field-label {
   display: block;
